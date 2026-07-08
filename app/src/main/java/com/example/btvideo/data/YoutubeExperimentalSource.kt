@@ -10,11 +10,10 @@ import java.net.URLEncoder
 import java.util.Locale
 
 /**
- * Modo experimental basado en yt-dlp/youtubedl-android.
- * Úsalo únicamente con contenido propio, autorizado o donde tengas permiso de descarga/retransmisión.
+ * Fuente de video basada en yt-dlp/youtubedl-android para preparar contenido desde el servidor.
  */
 class YoutubeExperimentalSource(private val context: Context) {
-    private val downloadDir: File = File(context.cacheDir, "youtube_experimental_cache").apply { mkdirs() }
+    private val downloadDir: File = File(context.cacheDir, "youtube_cache").apply { mkdirs() }
 
     fun search(queryOrUrl: String, maxResults: Int = 5): List<SearchResult> {
         val cleaned = queryOrUrl.trim()
@@ -90,8 +89,8 @@ class YoutubeExperimentalSource(private val context: Context) {
                 listOf(
                     SearchResult(
                         id = originalQuery,
-                        title = "URL experimental: $originalQuery",
-                        source = "youtube-experimental",
+                        title = "Video solicitado: $originalQuery",
+                        source = "YouTube",
                         verified = false,
                         durationText = "",
                         playable = true
@@ -125,7 +124,7 @@ class YoutubeExperimentalSource(private val context: Context) {
         return SearchResult(
             id = finalUrl,
             title = title,
-            source = "youtube-experimental",
+            source = "YouTube",
             verified = false,
             durationText = duration,
             playable = true

@@ -49,7 +49,7 @@ Ejemplo:
 {
   "id": "sample_low",
   "title": "Video demo",
-  "source": "local-cache-autorizado",
+  "source": "Biblioteca local",
   "verified": true,
   "durationText": "00:30"
 }
@@ -61,11 +61,11 @@ Archivo esperado:
 app/src/main/assets/videos/sample_low.mp4
 ```
 
-### YouTube experimental
+### YouTube
 
-El cliente puede seleccionar **YouTube experimental** para mandar una búsqueda al servidor. El servidor usa `yt-dlp` mediante `youtubedl-android`, intenta descargar/cachear el video y después lo envía por Bluetooth al cliente.
+El cliente puede seleccionar **YouTube** para mandar una búsqueda al servidor. El servidor usa `yt-dlp` mediante `youtubedl-android`, intenta descargar/cachear el video y después lo envía por Bluetooth al cliente.
 
-Este modo depende de Internet en el servidor, disponibilidad del contenido, tamaño del video y comportamiento de YouTube. Debe usarse únicamente con contenido propio, autorizado o con permiso para descarga/retransmisión.
+Este modo depende de Internet en el servidor, disponibilidad del contenido, tamaño del video y comportamiento de YouTube.
 
 ## Funcionalidades implementadas
 
@@ -74,7 +74,7 @@ Este modo depende de Internet en el servidor, disponibilidad del contenido, tama
 - Búsqueda desde cliente sin Internet.
 - Biblioteca local seleccionable desde el servidor.
 - Videos demo internos en assets.
-- Modo YouTube experimental.
+- Modo YouTube.
 - Transferencia de video por chunks.
 - Indicador de buffer, progreso y velocidad aproximada.
 - Reproducción local con `VideoView` y `MediaController`.
@@ -136,5 +136,5 @@ app/src/main/java/com/example/btvideo/bluetooth/Protocol.kt
 ## Notas
 
 - El emulador sirve para revisar la interfaz, pero la comunicación Bluetooth real debe probarse con dos dispositivos físicos.
-- El servidor debe tener Internet únicamente si se usa YouTube experimental.
+- El servidor debe tener Internet únicamente si se usa YouTube.
 - El cliente debe permanecer sin Wi‑Fi ni datos móviles durante la prueba.

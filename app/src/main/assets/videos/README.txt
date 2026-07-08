@@ -1,4 +1,4 @@
-Coloca aquí los archivos MP4 autorizados para la demo.
+Coloca aquí archivos MP4 para usar como videos demo locales.
 
 Ejemplos esperados por catalog.json:
 - sample_low.mp4

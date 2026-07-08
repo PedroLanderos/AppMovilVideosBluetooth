@@ -49,7 +49,7 @@ class ServerActivity : Activity(), BluetoothConnection.Listener {
         youtubeExperimental = YoutubeExperimentalSource(this)
         connection = BluetoothConnection(this, this)
 
-        cacheInfo.text = "Fuentes locales: biblioteca elegida desde este celular + videos demo en assets/videos/*.mp4\nCaché YouTube experimental: cacheDir/youtube_experimental_cache"
+        cacheInfo.text = "Fuentes locales: biblioteca elegida desde este celular + videos demo en assets/videos/*.mp4\nCaché YouTube: cacheDir/youtube_cache"
         refreshLibraryInfo()
 
         findViewById<Button>(R.id.startServerButton).setOnClickListener {
@@ -147,7 +147,7 @@ class ServerActivity : Activity(), BluetoothConnection.Listener {
                 VideoSourceMode.YOUTUBE_EXPERIMENTAL -> youtubeExperimental.search(query)
             }
         } catch (e: Exception) {
-            connection.send(FrameType.ERROR, Protocol.error("Error buscando en $sourceMode: ${e.message}"))
+            connection.send(FrameType.ERROR, Protocol.error("No se pudo completar la búsqueda: ${e.message}"))
             return
         }
 
@@ -168,13 +168,13 @@ class ServerActivity : Activity(), BluetoothConnection.Listener {
             VideoSourceMode.YOUTUBE_EXPERIMENTAL -> lastResults[videoId] ?: SearchResult(
                 id = videoId,
                 title = videoId,
-                source = "youtube-experimental",
+                source = "YouTube",
                 verified = false
             )
         }
 
         if (sourceMode == VideoSourceMode.YOUTUBE_EXPERIMENTAL) {
-            appendLog("Aviso: usando modo YouTube experimental/no verificado. Puede tardar y puede fallar.")
+            appendLog("Preparando video desde YouTube. Este proceso puede tardar unos minutos.")
         }
 
         val video = try {

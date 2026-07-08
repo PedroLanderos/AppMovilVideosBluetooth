@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Biblioteca servidor"
+            android:text="Biblioteca del servidor"
             android:textColor="?attr/screenTextColor"
             android:buttonTint="?attr/brandColor" />
 
@@ -62,16 +62,16 @@
             android:id="@+id/youtubeExperimentalRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="YouTube experimental"
+            android:text="YouTube"
             android:textColor="?attr/screenTextColor"
             android:buttonTint="?attr/brandColor" />
     </RadioGroup>
 
     <TextView
-        android:id="@+id/sourceWarningText"
+        android:id="@+id/sourceHelpText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Biblioteca servidor: busca videos agregados en el celular servidor."
+        android:text="Biblioteca del servidor: busca videos agregados en el celular servidor."
         android:textSize="12sp"
         android:textColor="?attr/subtleTextColor" />
 

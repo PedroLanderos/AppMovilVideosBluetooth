@@ -30,7 +30,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
     private lateinit var privateModeCheck: CheckBox
     private lateinit var audioOnlyCheck: CheckBox
     private lateinit var sourceRadioGroup: RadioGroup
-    private lateinit var sourceWarningText: TextView
+    private lateinit var sourceHelpText: TextView
     private lateinit var videoContainer: FrameLayout
     private lateinit var videoView: VideoView
     private lateinit var connection: BluetoothConnection
@@ -60,7 +60,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         privateModeCheck = findViewById(R.id.privateModeCheck)
         audioOnlyCheck = findViewById(R.id.audioOnlyCheck)
         sourceRadioGroup = findViewById(R.id.sourceRadioGroup)
-        sourceWarningText = findViewById(R.id.sourceWarningText)
+        sourceHelpText = findViewById(R.id.sourceHelpText)
         videoContainer = findViewById(R.id.videoContainer)
 
         videoView = VideoView(this).apply {
@@ -89,9 +89,9 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
     }
 
     private fun updateSourceHelpText() {
-        sourceWarningText.text = when (selectedSourceMode()) {
-            VideoSourceMode.LOCAL -> "Biblioteca servidor: busca videos agregados en el celular servidor o videos demo incluidos."
-            VideoSourceMode.YOUTUBE_EXPERIMENTAL -> "YouTube experimental: el servidor buscará/descargará con yt-dlp. Úsalo solo con contenido autorizado o con permiso."
+        sourceHelpText.text = when (selectedSourceMode()) {
+            VideoSourceMode.LOCAL -> "Biblioteca del servidor: busca videos agregados en el celular servidor o videos demo incluidos."
+            VideoSourceMode.YOUTUBE_EXPERIMENTAL -> "YouTube: el servidor realizará la búsqueda y preparará el video para enviarlo al cliente."
         }
     }
 
@@ -117,7 +117,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         if (query.isBlank()) return
         val sourceMode = selectedSourceMode()
         connection.send(FrameType.SEARCH_REQUEST, Protocol.searchRequest(query, sourceMode))
-        status.text = if (sourceMode == VideoSourceMode.LOCAL) "Estado: buscando en biblioteca del servidor..." else "Estado: buscando en ${sourceMode.wireName}..."
+        status.text = if (sourceMode == VideoSourceMode.LOCAL) "Estado: buscando en biblioteca del servidor..." else "Estado: buscando en YouTube..."
     }
 
     override fun onConnected(role: String) = runOnUiThread {
@@ -154,8 +154,15 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
                 setPadding(0, 10, 0, 10)
             }
             val title = TextView(this).apply {
-                val secureText = if (item.verified) "verificada" else "no verificada"
-                text = "${item.title}\nFuente: ${item.source} | $secureText ${item.durationText}"
+                val sourceText = when {
+                    item.source.contains("youtube", ignoreCase = true) -> "YouTube"
+                    item.source.contains("library", ignoreCase = true) -> "Biblioteca del servidor"
+                    item.source.contains("asset", ignoreCase = true) -> "Videos demo"
+                    item.source.contains("local", ignoreCase = true) -> "Biblioteca local"
+                    else -> item.source
+                }
+                val durationText = if (item.durationText.isBlank()) "" else " | ${item.durationText}"
+                text = "${item.title}\nFuente: $sourceText$durationText"
                 textSize = 16f
             }
             val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -171,9 +178,6 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
                     connection.send(FrameType.PLAY_REQUEST, Protocol.playRequest(item.id, sourceMode, audioOnlyCheck.isChecked))
                     status.text = "Estado: solicitando video..."
                     bufferStatus.text = "Buffer: esperando transferencia"
-                    if (!item.verified) {
-                        Toast.makeText(this@ClientActivity, "Contenido no verificado/experimental", Toast.LENGTH_LONG).show()
-                    }
                 }
             }
             val favorite = Button(this).apply {

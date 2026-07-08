@@ -8,7 +8,7 @@ import java.net.URLEncoder
 
 /**
  * Servicio opcional para búsqueda oficial de metadata con YouTube Data API.
- * No descarga ni extrae video. Úsalo solo si tienes API key y aceptas los términos de YouTube.
+ * Servicio opcional para consultar metadatos mediante API key.
  */
 class YoutubeMetadataService(private val apiKey: String) {
     fun search(query: String, maxResults: Int = 5): List<SearchResult> {

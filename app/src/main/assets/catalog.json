@@ -2,14 +2,14 @@
   {
     "id": "sample_low",
     "title": "Video de demostración local - baja calidad",
-    "source": "local-cache-autorizado",
+    "source": "Biblioteca local",
     "verified": true,
     "durationText": "00:10"
   },
   {
     "id": "sample_music",
     "title": "Demo musical autorizada",
-    "source": "local-cache-autorizado",
+    "source": "Biblioteca local",
     "verified": true,
     "durationText": "00:20"
   }
