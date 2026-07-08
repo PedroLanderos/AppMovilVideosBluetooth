@@ -1,0 +1,17 @@
+<resources>
+    <style name="Theme.BtVideo.Guinda" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/ipn_guinda_dark</item>
+        <item name="android:navigationBarColor">@color/ipn_guinda</item>
+        <item name="android:colorAccent">@color/ipn_guinda</item>
+    </style>
+
+    <style name="Theme.BtVideo.Azul" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/escom_azul_dark</item>
+        <item name="android:navigationBarColor">@color/escom_azul</item>
+        <item name="android:colorAccent">@color/escom_azul</item>
+    </style>
+</resources>

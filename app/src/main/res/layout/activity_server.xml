@@ -1,0 +1,45 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Servidor"
+            android:textStyle="bold"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/serverStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estado: detenido"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/startServerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Iniciar servidor Bluetooth"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/cacheInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Caché: assets/videos/*.mp4"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/serverLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textIsSelectable="true" />
+    </LinearLayout>
+</ScrollView>

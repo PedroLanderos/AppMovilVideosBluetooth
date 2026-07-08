@@ -1,0 +1,8 @@
+<resources>
+    <color name="ipn_guinda">#6C1D45</color>
+    <color name="ipn_guinda_dark">#4A1230</color>
+    <color name="escom_azul">#0057A8</color>
+    <color name="escom_azul_dark">#003E7A</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>
