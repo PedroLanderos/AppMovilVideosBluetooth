@@ -9,7 +9,11 @@ import com.example.btvideo.R
 import com.example.btvideo.bluetooth.BluetoothConnection
 import com.example.btvideo.bluetooth.FrameType
 import com.example.btvideo.bluetooth.Protocol
+import com.example.btvideo.data.TransferVideo
 import com.example.btvideo.data.VideoCatalog
+import com.example.btvideo.data.YoutubeExperimentalSource
+import com.example.btvideo.model.SearchResult
+import com.example.btvideo.model.VideoSourceMode
 import com.example.btvideo.util.PermissionHelper
 import com.example.btvideo.util.ThemePrefs
 import org.json.JSONObject
@@ -18,8 +22,12 @@ import java.io.IOException
 class ServerActivity : Activity(), BluetoothConnection.Listener {
     private lateinit var status: TextView
     private lateinit var logView: TextView
+    private lateinit var cacheInfo: TextView
     private lateinit var connection: BluetoothConnection
     private lateinit var catalog: VideoCatalog
+    private lateinit var youtubeExperimental: YoutubeExperimentalSource
+
+    private val lastResults = mutableMapOf<String, SearchResult>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemePrefs.apply(this)
@@ -29,8 +37,12 @@ class ServerActivity : Activity(), BluetoothConnection.Listener {
 
         status = findViewById(R.id.serverStatus)
         logView = findViewById(R.id.serverLog)
+        cacheInfo = findViewById(R.id.cacheInfo)
         catalog = VideoCatalog(this)
+        youtubeExperimental = YoutubeExperimentalSource(this)
         connection = BluetoothConnection(this, this)
+
+        cacheInfo.text = "Caché local: assets/videos/*.mp4\nCaché YouTube experimental: cacheDir/youtube_experimental_cache"
 
         findViewById<Button>(R.id.startServerButton).setOnClickListener {
             status.text = "Estado: esperando cliente..."
@@ -59,28 +71,71 @@ class ServerActivity : Activity(), BluetoothConnection.Listener {
     }
 
     private fun handleSearch(payload: ByteArray) {
-        val query = JSONObject(String(payload)).getString("query")
-        appendLog("Búsqueda: $query")
-        val results = catalog.search(query)
+        val json = JSONObject(String(payload))
+        val query = json.getString("query")
+        val sourceMode = VideoSourceMode.fromWireName(json.optString("sourceMode", VideoSourceMode.LOCAL.wireName))
+        appendLog("Búsqueda [$sourceMode]: $query")
+
+        val results = try {
+            when (sourceMode) {
+                VideoSourceMode.LOCAL -> catalog.search(query)
+                VideoSourceMode.YOUTUBE_EXPERIMENTAL -> youtubeExperimental.search(query)
+            }
+        } catch (e: Exception) {
+            connection.send(FrameType.ERROR, Protocol.error("Error buscando en $sourceMode: ${e.message}"))
+            return
+        }
+
+        lastResults.clear()
+        results.forEach { lastResults[it.id] = it }
         connection.send(FrameType.SEARCH_RESPONSE, Protocol.searchResponse(results))
+        appendLog("Resultados enviados: ${results.size}")
     }
 
     private fun handlePlay(payload: ByteArray) {
         val json = JSONObject(String(payload))
         val videoId = json.getString("videoId")
+        val sourceMode = VideoSourceMode.fromWireName(json.optString("sourceMode", VideoSourceMode.LOCAL.wireName))
         val lowPower = json.optBoolean("lowPower", false)
-        val result = catalog.find(videoId)
-        val video = catalog.openVideoAsset(videoId, lowPower)
-        if (result == null || video == null) {
-            connection.send(FrameType.ERROR, Protocol.error("No existe el video $videoId en assets/videos. Agrega $videoId.mp4 o ${videoId}_low.mp4."))
+
+        val result = when (sourceMode) {
+            VideoSourceMode.LOCAL -> catalog.find(videoId)
+            VideoSourceMode.YOUTUBE_EXPERIMENTAL -> lastResults[videoId] ?: SearchResult(
+                id = videoId,
+                title = videoId,
+                source = "youtube-experimental",
+                verified = false
+            )
+        }
+
+        if (sourceMode == VideoSourceMode.YOUTUBE_EXPERIMENTAL) {
+            appendLog("Aviso: usando modo YouTube experimental/no verificado. Puede tardar y puede fallar.")
+        }
+
+        val video = try {
+            when (sourceMode) {
+                VideoSourceMode.LOCAL -> catalog.openVideoAsset(videoId, lowPower)
+                VideoSourceMode.YOUTUBE_EXPERIMENTAL -> youtubeExperimental.getVideo(videoId, lowPower)
+            }
+        } catch (e: Exception) {
+            connection.send(FrameType.ERROR, Protocol.error("No se pudo preparar el video: ${e.message}"))
             return
         }
 
-        appendLog("Enviando: ${result.title} (${video.totalBytes} bytes)")
-        connection.send(FrameType.VIDEO_META, Protocol.videoMeta(videoId, result.title, video.totalBytes, "video/mp4"))
+        if (result == null || video == null) {
+            connection.send(FrameType.ERROR, Protocol.error("No existe o no se pudo abrir el video $videoId"))
+            return
+        }
+
+        sendVideo(videoId = videoId, title = result.title, video = video)
+    }
+
+    private fun sendVideo(videoId: String, title: String, video: TransferVideo) {
+        appendLog("Enviando: $title (${video.totalBytes} bytes)")
+        connection.send(FrameType.VIDEO_META, Protocol.videoMeta(videoId, title, video.totalBytes, video.mime))
 
         try {
-            video.inputStream.use { input ->
+            video.inputStreamFactory().use { input ->
                 val buffer = ByteArray(Protocol.CHUNK_SIZE)
                 var read: Int
                 while (input.read(buffer).also { read = it } != -1) {
@@ -89,7 +144,7 @@ class ServerActivity : Activity(), BluetoothConnection.Listener {
                 }
             }
             connection.send(FrameType.VIDEO_END)
-            appendLog("Transferencia completa: ${result.title}")
+            appendLog("Transferencia completa: $title")
         } catch (e: IOException) {
             connection.send(FrameType.ERROR, Protocol.error("Error enviando video: ${e.message}"))
         }

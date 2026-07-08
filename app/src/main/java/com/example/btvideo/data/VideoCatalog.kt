@@ -3,7 +3,6 @@ package com.example.btvideo.data
 import android.content.Context
 import com.example.btvideo.model.SearchResult
 import org.json.JSONArray
-import java.io.File
 
 class VideoCatalog(private val context: Context) {
 
@@ -18,20 +17,21 @@ class VideoCatalog(private val context: Context) {
 
     fun find(videoId: String): SearchResult? = loadCatalog().firstOrNull { it.id == videoId }
 
-    fun openVideoAsset(videoId: String, lowPower: Boolean): AssetVideo? {
+    fun openVideoAsset(videoId: String, lowPower: Boolean): TransferVideo? {
         val fileName = if (lowPower) "videos/${videoId}_low.mp4" else "videos/$videoId.mp4"
-        return try {
-            val afd = context.assets.openFd(fileName)
-            AssetVideo(fileName, afd.length, context.assets.open(fileName))
-        } catch (_: Exception) {
-            try {
-                val fallback = "videos/$videoId.mp4"
-                val afd = context.assets.openFd(fallback)
-                AssetVideo(fallback, afd.length, context.assets.open(fallback))
-            } catch (_: Exception) {
-                null
-            }
-        }
+        return openAsset(fileName) ?: openAsset("videos/$videoId.mp4")
+    }
+
+    private fun openAsset(fileName: String): TransferVideo? = try {
+        val afd = context.assets.openFd(fileName)
+        TransferVideo(
+            displayName = fileName,
+            totalBytes = afd.length,
+            mime = "video/mp4",
+            inputStreamFactory = { context.assets.open(fileName) }
+        )
+    } catch (_: Exception) {
+        null
     }
 
     private fun loadCatalog(): List<SearchResult> {
@@ -44,14 +44,9 @@ class VideoCatalog(private val context: Context) {
                 title = obj.getString("title"),
                 source = obj.optString("source", "local-cache"),
                 verified = obj.optBoolean("verified", true),
-                durationText = obj.optString("durationText", "")
+                durationText = obj.optString("durationText", ""),
+                playable = true
             )
         }
     }
 }
-
-data class AssetVideo(
-    val assetPath: String,
-    val totalBytes: Long,
-    val inputStream: java.io.InputStream
-)

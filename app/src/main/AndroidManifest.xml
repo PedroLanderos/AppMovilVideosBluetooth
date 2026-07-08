@@ -14,10 +14,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
+        android:name=".BtVideoApplication"
         android:allowBackup="true"
         android:theme="@style/Theme.BtVideo.Guinda"
         android:label="BT Video Player"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:extractNativeLibs="true">
         <activity android:name=".ui.ClientActivity" android:screenOrientation="portrait" />
         <activity android:name=".ui.ServerActivity" android:screenOrientation="portrait" />
         <activity android:name=".ui.MainActivity" android:exported="true">

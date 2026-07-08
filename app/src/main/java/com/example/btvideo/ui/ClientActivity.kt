@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.widget.*
 import com.example.btvideo.R
 import com.example.btvideo.bluetooth.BluetoothConnection
@@ -14,6 +13,7 @@ import com.example.btvideo.bluetooth.FrameType
 import com.example.btvideo.bluetooth.Protocol
 import com.example.btvideo.data.LocalStore
 import com.example.btvideo.model.SearchResult
+import com.example.btvideo.model.VideoSourceMode
 import com.example.btvideo.util.PermissionHelper
 import com.example.btvideo.util.ThemePrefs
 import org.json.JSONObject
@@ -29,6 +29,9 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
     private lateinit var searchInput: EditText
     private lateinit var privateModeCheck: CheckBox
     private lateinit var audioOnlyCheck: CheckBox
+    private lateinit var sourceRadioGroup: RadioGroup
+    private lateinit var sourceWarningText: TextView
+    private lateinit var videoContainer: FrameLayout
     private lateinit var videoView: VideoView
     private lateinit var connection: BluetoothConnection
     private lateinit var store: LocalStore
@@ -56,8 +59,18 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         searchInput = findViewById(R.id.searchInput)
         privateModeCheck = findViewById(R.id.privateModeCheck)
         audioOnlyCheck = findViewById(R.id.audioOnlyCheck)
-        videoView = findViewById(R.id.videoView)
-        videoView.setMediaController(MediaController(this))
+        sourceRadioGroup = findViewById(R.id.sourceRadioGroup)
+        sourceWarningText = findViewById(R.id.sourceWarningText)
+        videoContainer = findViewById(R.id.videoContainer)
+
+        videoView = VideoView(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            setMediaController(MediaController(this@ClientActivity))
+        }
+        videoContainer.addView(videoView)
 
         store = LocalStore(this)
         connection = BluetoothConnection(this, this)
@@ -65,6 +78,21 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
 
         findViewById<Button>(R.id.connectButton).setOnClickListener { connectSelectedDevice() }
         findViewById<Button>(R.id.searchButton).setOnClickListener { sendSearch() }
+
+        sourceRadioGroup.setOnCheckedChangeListener { _, _ -> updateSourceHelpText() }
+        updateSourceHelpText()
+    }
+
+    private fun selectedSourceMode(): VideoSourceMode = when (sourceRadioGroup.checkedRadioButtonId) {
+        R.id.youtubeExperimentalRadio -> VideoSourceMode.YOUTUBE_EXPERIMENTAL
+        else -> VideoSourceMode.LOCAL
+    }
+
+    private fun updateSourceHelpText() {
+        sourceWarningText.text = when (selectedSourceMode()) {
+            VideoSourceMode.LOCAL -> "Modo Local: reproduce videos autorizados guardados en el servidor."
+            VideoSourceMode.YOUTUBE_EXPERIMENTAL -> "YouTube experimental: el servidor buscará/descargará con yt-dlp. Úsalo solo con contenido autorizado o con permiso."
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -87,8 +115,9 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
     private fun sendSearch() {
         val query = searchInput.text.toString().trim()
         if (query.isBlank()) return
-        connection.send(FrameType.SEARCH_REQUEST, Protocol.searchRequest(query))
-        status.text = "Estado: buscando..."
+        val sourceMode = selectedSourceMode()
+        connection.send(FrameType.SEARCH_REQUEST, Protocol.searchRequest(query, sourceMode))
+        status.text = "Estado: buscando en ${sourceMode.wireName}..."
     }
 
     override fun onConnected(role: String) = runOnUiThread {
@@ -125,15 +154,26 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
                 setPadding(0, 10, 0, 10)
             }
             val title = TextView(this).apply {
-                text = "${item.title}\nFuente: ${item.source} | ${if (item.verified) "verificada" else "no verificada"} ${item.durationText}"
+                val secureText = if (item.verified) "verificada" else "no verificada"
+                text = "${item.title}\nFuente: ${item.source} | $secureText ${item.durationText}"
                 textSize = 16f
             }
             val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
             val play = Button(this).apply {
                 text = "Reproducir"
+                isEnabled = item.playable
                 setOnClickListener {
-                    connection.send(FrameType.PLAY_REQUEST, Protocol.playRequest(item.id, audioOnlyCheck.isChecked))
+                    val sourceMode = if (item.source.contains("youtube", ignoreCase = true)) {
+                        VideoSourceMode.YOUTUBE_EXPERIMENTAL
+                    } else {
+                        VideoSourceMode.LOCAL
+                    }
+                    connection.send(FrameType.PLAY_REQUEST, Protocol.playRequest(item.id, sourceMode, audioOnlyCheck.isChecked))
                     status.text = "Estado: solicitando video..."
+                    bufferStatus.text = "Buffer: esperando transferencia"
+                    if (!item.verified) {
+                        Toast.makeText(this@ClientActivity, "Contenido no verificado/experimental", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
             val favorite = Button(this).apply {
@@ -158,7 +198,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         expectedBytes = json.getLong("totalBytes")
         currentBytes = 0
         transferStartedAt = System.currentTimeMillis()
-        currentFile = File(cacheDir, "bt_${currentVideoId}_${System.currentTimeMillis()}.mp4")
+        currentFile = File(cacheDir, "bt_${System.currentTimeMillis()}.mp4")
         currentOutput = FileOutputStream(currentFile)
         runOnUiThread {
             bufferStatus.text = "Buffer: 0%"

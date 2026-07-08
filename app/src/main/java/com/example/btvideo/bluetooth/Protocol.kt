@@ -1,6 +1,7 @@
 package com.example.btvideo.bluetooth
 
 import com.example.btvideo.model.SearchResult
+import com.example.btvideo.model.VideoSourceMode
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -16,7 +17,7 @@ enum class FrameType(val code: Int) {
     PONG(9);
 
     companion object {
-        fun fromCode(code: Int): FrameType = values().firstOrNull { it.code == code }
+        fun fromCode(code: Int): FrameType = entries.firstOrNull { it.code == code }
             ?: throw IllegalArgumentException("Unknown frame type: $code")
     }
 }
@@ -26,10 +27,15 @@ object Protocol {
     const val SERVICE_UUID = "7f67a2ac-4d64-4cb1-81f0-2cda9be39981"
     const val CHUNK_SIZE = 16 * 1024
 
-    fun searchRequest(query: String): ByteArray = JSONObject().put("query", query).toString().toByteArray()
+    fun searchRequest(query: String, sourceMode: VideoSourceMode): ByteArray = JSONObject()
+        .put("query", query)
+        .put("sourceMode", sourceMode.wireName)
+        .toString()
+        .toByteArray()
 
-    fun playRequest(videoId: String, lowPower: Boolean): ByteArray = JSONObject()
+    fun playRequest(videoId: String, sourceMode: VideoSourceMode, lowPower: Boolean): ByteArray = JSONObject()
         .put("videoId", videoId)
+        .put("sourceMode", sourceMode.wireName)
         .put("lowPower", lowPower)
         .toString()
         .toByteArray()
@@ -52,7 +58,8 @@ object Protocol {
                 .put("title", item.title)
                 .put("source", item.source)
                 .put("verified", item.verified)
-                .put("durationText", item.durationText))
+                .put("durationText", item.durationText)
+                .put("playable", item.playable))
         }
         return JSONObject().put("results", array).toString().toByteArray()
     }
@@ -67,7 +74,8 @@ object Protocol {
                 title = obj.getString("title"),
                 source = obj.getString("source"),
                 verified = obj.optBoolean("verified", false),
-                durationText = obj.optString("durationText")
+                durationText = obj.optString("durationText"),
+                playable = obj.optBoolean("playable", true)
             )
         }
     }

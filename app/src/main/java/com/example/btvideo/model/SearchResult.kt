@@ -5,5 +5,6 @@ data class SearchResult(
     val title: String,
     val source: String,
     val verified: Boolean,
-    val durationText: String = ""
+    val durationText: String = "",
+    val playable: Boolean = true
 )

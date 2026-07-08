@@ -30,6 +30,39 @@
         android:layout_height="wrap_content"
         android:text="Conectar a servidor emparejado" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Buscar en:" />
+
+    <RadioGroup
+        android:id="@+id/sourceRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/localSourceRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Local" />
+
+        <RadioButton
+            android:id="@+id/youtubeExperimentalRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YouTube experimental" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/sourceWarningText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Modo Local: reproduce videos autorizados guardados en el servidor."
+        android:textSize="12sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Buscar video o pegar URL" />
+            android:hint="Buscar título o pegar URL" />
         <Button
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
@@ -58,7 +91,7 @@
         android:id="@+id/audioOnlyCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bajo consumo: audio / baja calidad" />
+        android:text="Bajo consumo: baja calidad" />
 
     <TextView
         android:id="@+id/bufferStatus"
@@ -66,11 +99,20 @@
         android:layout_height="wrap_content"
         android:text="Buffer: 0%" />
 
-    <VideoView
-        android:id="@+id/videoView"
+    <FrameLayout
+        android:id="@+id/videoContainer"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:background="#111111">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Reproductor de video"
+            android:textColor="#FFFFFF" />
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
