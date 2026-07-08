@@ -1,0 +1,105 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:1:1-30:12
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:1:1-30:12
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:1:1-30:12
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:1:1-30:12
+	package
+		INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:1:11-69
+uses-feature#android.hardware.bluetooth
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:3:5-87
+	android:required
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:3:61-84
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:3:19-60
+uses-permission#android.permission.INTERNET
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:5:22-64
+uses-permission#android.permission.BLUETOOTH
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:7:5-95
+	android:maxSdkVersion
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:7:66-92
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:7:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:8:5-101
+	android:maxSdkVersion
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:8:72-98
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:8:22-71
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:9:5-106
+	android:maxSdkVersion
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:9:77-103
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:9:22-76
+uses-permission#android.permission.BLUETOOTH_SCAN
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:11:5-12:58
+	android:usesPermissionFlags
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:12:9-55
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:11:22-70
+uses-permission#android.permission.BLUETOOTH_ADVERTISE
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:13:5-78
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:13:22-75
+uses-permission#android.permission.BLUETOOTH_CONNECT
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:14:5-76
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:14:22-73
+application
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:16:5-29:19
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:16:5-29:19
+	android:extractNativeLibs
+		INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+	android:label
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:19:9-40
+	android:allowBackup
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:17:9-35
+	android:theme
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:18:9-52
+	android:usesCleartextTraffic
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:20:9-44
+activity#com.example.btvideo.ui.ClientActivity
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:21:9-92
+	android:screenOrientation
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:21:53-89
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:21:19-52
+activity#com.example.btvideo.ui.ServerActivity
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:22:9-92
+	android:screenOrientation
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:22:53-89
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:22:19-52
+activity#com.example.btvideo.ui.MainActivity
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:23:9-28:20
+	android:exported
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:23:51-74
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:23:19-50
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:24:13-27:29
+action#android.intent.action.MAIN
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:25:17-69
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:25:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:26:17-77
+	android:name
+		ADDED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml:26:27-74
+uses-sdk
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\code\BluetoothVideoPlayerStarter\app\src\main\AndroidManifest.xml

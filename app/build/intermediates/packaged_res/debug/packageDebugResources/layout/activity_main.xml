@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BT Video Player"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Elige el rol del dispositivo"
+        android:gravity="center"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/serverButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dispositivo A - Servidor"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:id="@+id/clientButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dispositivo B - Cliente"
+        android:layout_marginTop="12dp" />
+
+    <Button
+        android:id="@+id/themeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cambiar tema Guinda/Azul"
+        android:layout_marginTop="24dp" />
+</LinearLayout>
