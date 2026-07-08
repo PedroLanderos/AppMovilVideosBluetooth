@@ -90,7 +90,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
 
     private fun updateSourceHelpText() {
         sourceWarningText.text = when (selectedSourceMode()) {
-            VideoSourceMode.LOCAL -> "Modo Local: reproduce videos autorizados guardados en el servidor."
+            VideoSourceMode.LOCAL -> "Biblioteca servidor: busca videos agregados en el celular servidor o videos demo incluidos."
             VideoSourceMode.YOUTUBE_EXPERIMENTAL -> "YouTube experimental: el servidor buscará/descargará con yt-dlp. Úsalo solo con contenido autorizado o con permiso."
         }
     }
@@ -117,7 +117,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         if (query.isBlank()) return
         val sourceMode = selectedSourceMode()
         connection.send(FrameType.SEARCH_REQUEST, Protocol.searchRequest(query, sourceMode))
-        status.text = "Estado: buscando en ${sourceMode.wireName}..."
+        status.text = if (sourceMode == VideoSourceMode.LOCAL) "Estado: buscando en biblioteca del servidor..." else "Estado: buscando en ${sourceMode.wireName}..."
     }
 
     override fun onConnected(role: String) = runOnUiThread {

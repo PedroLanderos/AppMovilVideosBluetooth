@@ -35,10 +35,41 @@
             android:layout_marginTop="16dp" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Biblioteca local del servidor"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="?attr/screenTextColor"
+            android:layout_marginTop="18dp" />
+
+        <Button
+            android:id="@+id/addVideosButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar videos desde este celular" />
+
+        <Button
+            android:id="@+id/clearLibraryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Limpiar biblioteca agregada" />
+
+        <TextView
+            android:id="@+id/libraryInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Biblioteca del servidor: 0 videos agregados"
+            android:textColor="?attr/screenTextColor"
+            android:background="?attr/surfaceColor"
+            android:padding="12dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
             android:id="@+id/cacheInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Caché: assets/videos/*.mp4"
+            android:text="Fuentes locales: biblioteca del servidor + assets/videos/*.mp4"
             android:textColor="?attr/screenTextColor"
             android:background="?attr/surfaceColor"
             android:padding="12dp"
@@ -52,6 +83,7 @@
             android:textColor="?attr/screenTextColor"
             android:background="?attr/surfaceColor"
             android:padding="12dp"
+            android:text="Log del servidor:"
             android:textIsSelectable="true" />
     </LinearLayout>
 </ScrollView>

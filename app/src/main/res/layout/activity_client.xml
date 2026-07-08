@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Local"
+            android:text="Biblioteca servidor"
             android:textColor="?attr/screenTextColor"
             android:buttonTint="?attr/brandColor" />
 
@@ -71,7 +71,7 @@
         android:id="@+id/sourceWarningText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Modo Local: reproduce videos autorizados guardados en el servidor."
+        android:text="Biblioteca servidor: busca videos agregados en el celular servidor."
         android:textSize="12sp"
         android:textColor="?attr/subtleTextColor" />
 
