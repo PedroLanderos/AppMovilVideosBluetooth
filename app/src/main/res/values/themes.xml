@@ -1,17 +1,86 @@
 <resources>
-    <style name="Theme.BtVideo.Guinda" parent="android:style/Theme.Material.Light.NoActionBar">
+    <style name="Widget.BtVideo.Button" parent="@android:style/Widget.Material.Button">
+        <item name="android:backgroundTint">?attr/brandColor</item>
+        <item name="android:textColor">?attr/onBrandColor</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Theme.BtVideo.Guinda.Light" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/ipn_guinda_dark</item>
         <item name="android:navigationBarColor">@color/ipn_guinda</item>
         <item name="android:colorAccent">@color/ipn_guinda</item>
+        <item name="android:buttonStyle">@style/Widget.BtVideo.Button</item>
+        <item name="android:windowBackground">@color/ipn_guinda_light_bg</item>
+        <item name="android:textColorPrimary">@color/text_dark</item>
+        <item name="android:textColorSecondary">@color/text_dark</item>
+        <item name="brandColor">@color/ipn_guinda</item>
+        <item name="brandColorDark">@color/ipn_guinda_dark</item>
+        <item name="screenBackgroundColor">@color/ipn_guinda_light_bg</item>
+        <item name="screenTextColor">@color/text_dark</item>
+        <item name="surfaceColor">@color/surface_light</item>
+        <item name="onBrandColor">@color/white</item>
+        <item name="subtleTextColor">@color/text_dark</item>
     </style>
 
-    <style name="Theme.BtVideo.Azul" parent="android:style/Theme.Material.Light.NoActionBar">
+    <style name="Theme.BtVideo.Azul.Light" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/escom_azul_dark</item>
         <item name="android:navigationBarColor">@color/escom_azul</item>
         <item name="android:colorAccent">@color/escom_azul</item>
+        <item name="android:buttonStyle">@style/Widget.BtVideo.Button</item>
+        <item name="android:windowBackground">@color/escom_azul_light_bg</item>
+        <item name="android:textColorPrimary">@color/text_dark</item>
+        <item name="android:textColorSecondary">@color/text_dark</item>
+        <item name="brandColor">@color/escom_azul</item>
+        <item name="brandColorDark">@color/escom_azul_dark</item>
+        <item name="screenBackgroundColor">@color/escom_azul_light_bg</item>
+        <item name="screenTextColor">@color/text_dark</item>
+        <item name="surfaceColor">@color/surface_light</item>
+        <item name="onBrandColor">@color/white</item>
+        <item name="subtleTextColor">@color/text_dark</item>
     </style>
+
+    <style name="Theme.BtVideo.Guinda.Dark" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:statusBarColor">@color/ipn_guinda_dark</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:colorAccent">@color/ipn_guinda</item>
+        <item name="android:buttonStyle">@style/Widget.BtVideo.Button</item>
+        <item name="android:windowBackground">@color/screen_dark_guinda</item>
+        <item name="android:textColorPrimary">@color/text_light</item>
+        <item name="android:textColorSecondary">@color/subtle_dark</item>
+        <item name="brandColor">@color/ipn_guinda</item>
+        <item name="brandColorDark">@color/ipn_guinda_dark</item>
+        <item name="screenBackgroundColor">@color/screen_dark_guinda</item>
+        <item name="screenTextColor">@color/text_light</item>
+        <item name="surfaceColor">@color/surface_dark</item>
+        <item name="onBrandColor">@color/white</item>
+        <item name="subtleTextColor">@color/subtle_dark</item>
+    </style>
+
+    <style name="Theme.BtVideo.Azul.Dark" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:statusBarColor">@color/escom_azul_dark</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:colorAccent">@color/escom_azul</item>
+        <item name="android:buttonStyle">@style/Widget.BtVideo.Button</item>
+        <item name="android:windowBackground">@color/screen_dark_azul</item>
+        <item name="android:textColorPrimary">@color/text_light</item>
+        <item name="android:textColorSecondary">@color/subtle_dark</item>
+        <item name="brandColor">@color/escom_azul</item>
+        <item name="brandColorDark">@color/escom_azul_dark</item>
+        <item name="screenBackgroundColor">@color/screen_dark_azul</item>
+        <item name="screenTextColor">@color/text_light</item>
+        <item name="surfaceColor">@color/surface_dark</item>
+        <item name="onBrandColor">@color/white</item>
+        <item name="subtleTextColor">@color/subtle_dark</item>
+    </style>
+
+    <!-- Alias de compatibilidad para el Manifest y código anterior. -->
+    <style name="Theme.BtVideo.Guinda" parent="Theme.BtVideo.Guinda.Light" />
+    <style name="Theme.BtVideo.Azul" parent="Theme.BtVideo.Azul.Light" />
 </resources>

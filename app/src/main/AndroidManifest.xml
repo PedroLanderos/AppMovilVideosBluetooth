@@ -16,7 +16,7 @@
     <application
         android:name=".BtVideoApplication"
         android:allowBackup="true"
-        android:theme="@style/Theme.BtVideo.Guinda"
+        android:theme="@style/Theme.BtVideo.Guinda.Light"
         android:label="BT Video Player"
         android:usesCleartextTraffic="true"
         android:extractNativeLibs="true">

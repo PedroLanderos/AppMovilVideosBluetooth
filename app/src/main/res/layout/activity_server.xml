@@ -1,6 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/screenBackgroundColor">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,13 +14,17 @@
             android:layout_height="wrap_content"
             android:text="Servidor"
             android:textStyle="bold"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:padding="14dp"
+            android:background="?attr/brandColor"
+            android:textColor="?attr/onBrandColor" />
 
         <TextView
             android:id="@+id/serverStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Estado: detenido"
+            android:textColor="?attr/screenTextColor"
             android:layout_marginTop="12dp" />
 
         <Button
@@ -33,6 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Caché: assets/videos/*.mp4"
+            android:textColor="?attr/screenTextColor"
+            android:background="?attr/surfaceColor"
+            android:padding="12dp"
             android:layout_marginTop="16dp" />
 
         <TextView
@@ -40,6 +49,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="?attr/screenTextColor"
+            android:background="?attr/surfaceColor"
+            android:padding="12dp"
             android:textIsSelectable="true" />
     </LinearLayout>
 </ScrollView>

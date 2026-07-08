@@ -2,27 +2,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="?attr/screenBackgroundColor">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cliente"
         android:textStyle="bold"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:padding="12dp"
+        android:background="?attr/brandColor"
+        android:textColor="?attr/onBrandColor" />
 
     <TextView
         android:id="@+id/clientStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Estado: desconectado"
+        android:textColor="?attr/screenTextColor"
         android:layout_marginTop="4dp" />
 
     <Spinner
         android:id="@+id/deviceSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:backgroundTint="?attr/brandColor" />
 
     <Button
         android:id="@+id/connectButton"
@@ -34,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Buscar en:" />
+        android:text="Buscar en:"
+        android:textColor="?attr/screenTextColor" />
 
     <RadioGroup
         android:id="@+id/sourceRadioGroup"
@@ -47,13 +54,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Local" />
+            android:text="Local"
+            android:textColor="?attr/screenTextColor"
+            android:buttonTint="?attr/brandColor" />
 
         <RadioButton
             android:id="@+id/youtubeExperimentalRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="YouTube experimental" />
+            android:text="YouTube experimental"
+            android:textColor="?attr/screenTextColor"
+            android:buttonTint="?attr/brandColor" />
     </RadioGroup>
 
     <TextView
@@ -61,19 +72,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Modo Local: reproduce videos autorizados guardados en el servidor."
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:textColor="?attr/subtleTextColor" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="8dp">
+
         <EditText
             android:id="@+id/searchInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Buscar título o pegar URL" />
+            android:hint="Buscar título o pegar URL"
+            android:textColor="?attr/screenTextColor"
+            android:textColorHint="?attr/subtleTextColor"
+            android:backgroundTint="?attr/brandColor" />
+
         <Button
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
@@ -85,19 +102,24 @@
         android:id="@+id/privateModeCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Modo privado: no registrar historial" />
+        android:text="Modo privado: no registrar historial"
+        android:textColor="?attr/screenTextColor"
+        android:buttonTint="?attr/brandColor" />
 
     <CheckBox
         android:id="@+id/audioOnlyCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bajo consumo: baja calidad" />
+        android:text="Bajo consumo: baja calidad"
+        android:textColor="?attr/screenTextColor"
+        android:buttonTint="?attr/brandColor" />
 
     <TextView
         android:id="@+id/bufferStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Buffer: 0%" />
+        android:text="Buffer: 0%"
+        android:textColor="?attr/screenTextColor" />
 
     <FrameLayout
         android:id="@+id/videoContainer"
@@ -118,11 +140,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:background="?attr/surfaceColor">
+
         <LinearLayout
             android:id="@+id/resultsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:padding="8dp" />
     </ScrollView>
 </LinearLayout>

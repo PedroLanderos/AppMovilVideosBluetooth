@@ -3,22 +3,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="?attr/screenBackgroundColor">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="BT Video Player"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Elige el rol del dispositivo"
+        android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginTop="8dp" />
+        android:padding="24dp"
+        android:background="?attr/brandColor">
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BT Video Player"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="?attr/onBrandColor" />
+
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tema actual"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="?attr/onBrandColor" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/serverButton"
@@ -35,9 +49,16 @@
         android:layout_marginTop="12dp" />
 
     <Button
-        android:id="@+id/themeButton"
+        android:id="@+id/colorThemeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cambiar tema Guinda/Azul"
+        android:text="Cambiar color: Guinda IPN"
         android:layout_marginTop="24dp" />
+
+    <Button
+        android:id="@+id/modeThemeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cambiar claro/oscuro: Sistema"
+        android:layout_marginTop="8dp" />
 </LinearLayout>

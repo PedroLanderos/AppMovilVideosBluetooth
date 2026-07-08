@@ -1,0 +1,9 @@
+<resources>
+    <attr name="brandColor" format="color" />
+    <attr name="brandColorDark" format="color" />
+    <attr name="screenBackgroundColor" format="color" />
+    <attr name="screenTextColor" format="color" />
+    <attr name="surfaceColor" format="color" />
+    <attr name="onBrandColor" format="color" />
+    <attr name="subtleTextColor" format="color" />
+</resources>

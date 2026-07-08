@@ -7,10 +7,8 @@ import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
 
 class BtVideoApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
-
         try {
             YoutubeDL.getInstance().init(this)
             FFmpeg.getInstance().init(this)

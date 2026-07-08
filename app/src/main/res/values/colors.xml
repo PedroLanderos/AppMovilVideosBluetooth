@@ -1,8 +1,20 @@
 <resources>
+    <!-- Colores base tomados de la referencia IPN / ESCOM -->
     <color name="ipn_guinda">#6C1D45</color>
     <color name="ipn_guinda_dark">#4A1230</color>
-    <color name="escom_azul">#0057A8</color>
-    <color name="escom_azul_dark">#003E7A</color>
+    <color name="ipn_guinda_light_bg">#FFF7FA</color>
+
+    <color name="escom_azul">#0073A8</color>
+    <color name="escom_azul_dark">#00547A</color>
+    <color name="escom_azul_light_bg">#F3FAFF</color>
+
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
+    <color name="text_dark">#1F1F1F</color>
+    <color name="text_light">#FFFFFFFF</color>
+    <color name="surface_light">#FFFFFFFF</color>
+    <color name="surface_dark">#1A1A1A</color>
+    <color name="screen_dark_guinda">#1E0B14</color>
+    <color name="screen_dark_azul">#071923</color>
+    <color name="subtle_dark">#BBBBBB</color>
 </resources>
