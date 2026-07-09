@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.widget.*
@@ -70,6 +71,8 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
+            setBackgroundColor(Color.BLACK)
+            setZOrderOnTop(true)
             setMediaController(MediaController(this@ClientActivity))
             setOnPreparedListener { mediaPlayer ->
                 mediaPlayer.isLooping = false
@@ -248,7 +251,33 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         runOnUiThread {
             status.text = "Estado: reproducción lista"
             bufferStatus.text = "Buffer: 100%"
-            videoView.stopPlayback()
+            videoContainer.removeAllViews()
+            videoContainer.setBackgroundColor(Color.BLACK)
+            videoView = VideoView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+                setBackgroundColor(Color.BLACK)
+                setZOrderOnTop(true)
+                setMediaController(MediaController(this@ClientActivity))
+                setOnPreparedListener { mediaPlayer ->
+                    mediaPlayer.isLooping = false
+                    status.text = "Estado: reproduciendo $currentTitle"
+                    start()
+                }
+                setOnErrorListener { _, _, _ ->
+                    status.text = "Estado: formato de video no compatible con este dispositivo"
+                    Toast.makeText(
+                        this@ClientActivity,
+                        "Formato no compatible. Prueba otro video o usa baja calidad.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    true
+                }
+            }
+            videoContainer.addView(videoView)
+            videoView.bringToFront()
             videoView.setVideoURI(Uri.fromFile(file))
             videoView.requestFocus()
         }

@@ -1,6 +1,7 @@
 package com.example.btvideo.data
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import com.example.btvideo.model.SearchResult
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
@@ -13,7 +14,13 @@ import java.util.Locale
  * Fuente de video basada en yt-dlp/youtubedl-android para preparar contenido desde el servidor.
  */
 class YoutubeExperimentalSource(private val context: Context) {
-    private val downloadDir: File = File(context.cacheDir, "youtube_cache").apply { mkdirs() }
+    private val downloadDir: File = File(context.cacheDir, "youtube_cache_h264_v4").apply { mkdirs() }
+
+    private data class DownloadStrategy(
+        val name: String,
+        val selector: String,
+        val forceRecode: Boolean
+    )
 
     fun search(queryOrUrl: String, maxResults: Int = 5): List<SearchResult> {
         val cleaned = queryOrUrl.trim()
@@ -36,24 +43,56 @@ class YoutubeExperimentalSource(private val context: Context) {
         val prefix = safeFilePrefix(url)
         findCachedFile(prefix)?.let { return it.toTransferVideo() }
 
+        // YouTube no siempre ofrece el mismo conjunto de formatos para todos los videos.
+        // Algunos videos no tienen el formato 18/22 (MP4 progresivo), por eso se intenta
+        // primero con MP4 compatible y después con una estrategia universal que permite
+        // video+audio separados y recodifica a MP4/H.264/AAC para VideoView.
+        val errors = mutableListOf<String>()
+        for (strategy in downloadStrategies(lowPower)) {
+            clearCachedFiles(prefix)
+            try {
+                val downloaded = executeDownload(url, prefix, strategy)
+                if (!downloaded.hasVideoTrack()) {
+                    downloaded.delete()
+                    errors.add("${strategy.name}: el archivo no contiene pista de video")
+                    continue
+                }
+                return downloaded.toTransferVideo()
+            } catch (e: Exception) {
+                errors.add("${strategy.name}: ${e.message ?: e.javaClass.simpleName}")
+            }
+        }
+
+        throw IllegalStateException(
+            "No se pudo preparar una versión compatible del video. Intenta con otro resultado o con un video más corto. Detalle: " +
+                errors.joinToString(" | ")
+        )
+    }
+
+    private fun executeDownload(url: String, prefix: String, strategy: DownloadStrategy): File {
         val outputTemplate = File(downloadDir, "$prefix.%(ext)s").absolutePath
         val request = YoutubeDLRequest(url).apply {
             addOption("--no-playlist")
             addOption("--no-warnings")
-            addOption("--ignore-errors")
             addOption("--restrict-filenames")
             addOption("--no-mtime")
             addOption("--force-overwrites")
             addOption("--merge-output-format", "mp4")
             addOption("--remux-video", "mp4")
+            if (strategy.forceRecode) {
+                addOption("--recode-video", "mp4")
+                addOption(
+                    "--postprocessor-args",
+                    "ffmpeg:-c:v libx264 -preset ultrafast -profile:v baseline -level 3.0 -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart"
+                )
+            }
             addOption("-o", outputTemplate)
-            addOption("-f", formatSelector(lowPower))
+            addOption("-f", strategy.selector)
         }
 
         YoutubeDL.getInstance().execute(request)
-        val downloaded = findCachedFile(prefix)
-            ?: throw IllegalStateException("yt-dlp terminó, pero no se encontró el archivo descargado en ${downloadDir.absolutePath}")
-        return downloaded.toTransferVideo()
+        return findCachedFile(prefix)
+            ?: throw IllegalStateException("no se encontró el archivo generado en ${downloadDir.absolutePath}")
     }
 
     private fun parseSearchOutput(output: String, originalQuery: String, maxResults: Int): List<SearchResult> {
@@ -152,10 +191,45 @@ class YoutubeExperimentalSource(private val context: Context) {
             ?: files.maxByOrNull { it.lastModified() }
     }
 
-    private fun formatSelector(lowPower: Boolean): String = if (lowPower) {
-        "bestvideo[ext=mp4][vcodec^=avc1][height<=240]+bestaudio[ext=m4a][acodec^=mp4a]/best[ext=mp4][vcodec^=avc1][height<=240]/best[ext=mp4][height<=240]/worst[ext=mp4]/worst"
-    } else {
-        "bestvideo[ext=mp4][vcodec^=avc1][height<=360]+bestaudio[ext=m4a][acodec^=mp4a]/best[ext=mp4][vcodec^=avc1][height<=360]/best[ext=mp4][height<=360]/best[ext=mp4]/best"
+    private fun downloadStrategies(lowPower: Boolean): List<DownloadStrategy> {
+        val first = if (lowPower) {
+            // Intenta usar MP4 progresivo o MP4 de baja resolución si existe.
+            "best[ext=mp4][vcodec^=avc1][acodec^=mp4a][height<=360]/best[ext=mp4][height<=360]/best[height<=360]"
+        } else {
+            "best[ext=mp4][vcodec^=avc1][acodec^=mp4a][height<=480]/best[ext=mp4][height<=480]/best[height<=480]"
+        }
+
+        val fallback = if (lowPower) {
+            // Fallback universal: permite DASH/WebM/otros formatos, pero luego recodifica.
+            "bestvideo[height<=360]+bestaudio/bestvideo+bestaudio/best[height<=360]/best"
+        } else {
+            "bestvideo[height<=480]+bestaudio/bestvideo+bestaudio/best[height<=480]/best"
+        }
+
+        return listOf(
+            DownloadStrategy("MP4 compatible", first, forceRecode = true),
+            DownloadStrategy("Formato universal recodificado", fallback, forceRecode = true)
+        )
+    }
+
+    private fun clearCachedFiles(prefix: String) {
+        downloadDir.listFiles()
+            ?.filter { it.isFile && it.name.startsWith(prefix) }
+            ?.forEach { it.delete() }
+    }
+
+    private fun File.hasVideoTrack(): Boolean {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(absolutePath)
+            val width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull() ?: 0
+            val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull() ?: 0
+            width > 0 && height > 0
+        } catch (_: Exception) {
+            false
+        } finally {
+            try { retriever.release() } catch (_: Exception) { }
+        }
     }
 
     private fun mimeFromExtension(name: String): String = when (name.substringAfterLast('.', "").lowercase(Locale.US)) {
