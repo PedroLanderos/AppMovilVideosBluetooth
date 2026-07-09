@@ -138,3 +138,27 @@ app/src/main/java/com/example/btvideo/bluetooth/Protocol.kt
 - El emulador sirve para revisar la interfaz, pero la comunicación Bluetooth real debe probarse con dos dispositivos físicos.
 - El servidor debe tener Internet únicamente si se usa YouTube.
 - El cliente debe permanecer sin Wi‑Fi ni datos móviles durante la prueba.
+
+## Tests instrumentados para YouTube
+
+Se agregó un test instrumentado en:
+
+```text
+app/src/androidTest/java/com/example/btvideo/data/YoutubeExperimentalSourceTest.kt
+```
+
+Este test valida:
+
+- Que la búsqueda de YouTube regrese resultados.
+- Que `YoutubeExperimentalSource.getVideo(...)` genere un `TransferVideo` con MIME `video/mp4`.
+- Que el archivo resultante tenga una pista de video detectable con `MediaMetadataRetriever`.
+- Que el modo normal y el modo bajo consumo puedan producir un MP4 reproducible.
+
+Para ejecutarlo:
+
+1. Conecta un celular físico o abre un emulador con Internet.
+2. En Android Studio abre `YoutubeExperimentalSourceTest.kt`.
+3. Presiona el botón verde junto a la clase o junto a cada test.
+4. Ejecuta `Run 'YoutubeExperimentalSourceTest'`.
+
+Nota: estos tests dependen de Internet, YouTube, yt-dlp y FFmpeg. Si YouTube cambia formatos o bloquea temporalmente el acceso a un video, el test puede fallar aunque la app compile correctamente.
