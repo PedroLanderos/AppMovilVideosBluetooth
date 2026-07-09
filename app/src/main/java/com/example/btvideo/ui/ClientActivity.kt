@@ -44,6 +44,7 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
     private var expectedBytes = 0L
     private var currentTitle = ""
     private var currentVideoId = ""
+    private var currentMime = "video/mp4"
     private var transferStartedAt = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,14 +64,30 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         sourceHelpText = findViewById(R.id.sourceHelpText)
         videoContainer = findViewById(R.id.videoContainer)
 
+        videoContainer.removeAllViews()
         videoView = VideoView(this).apply {
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
             setMediaController(MediaController(this@ClientActivity))
+            setOnPreparedListener { mediaPlayer ->
+                mediaPlayer.isLooping = false
+                status.text = "Estado: reproduciendo $currentTitle"
+                start()
+            }
+            setOnErrorListener { _, _, _ ->
+                status.text = "Estado: el audio se recibió, pero el formato de video no es compatible con este dispositivo"
+                Toast.makeText(
+                    this@ClientActivity,
+                    "Formato de video no compatible. Usa MP4 H.264/AAC o activa baja calidad en YouTube.",
+                    Toast.LENGTH_LONG
+                ).show()
+                true
+            }
         }
         videoContainer.addView(videoView)
+        videoView.bringToFront()
 
         store = LocalStore(this)
         connection = BluetoothConnection(this, this)
@@ -200,9 +217,10 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         currentVideoId = json.getString("videoId")
         currentTitle = json.getString("title")
         expectedBytes = json.getLong("totalBytes")
+        currentMime = json.optString("mime", "video/mp4")
         currentBytes = 0
         transferStartedAt = System.currentTimeMillis()
-        currentFile = File(cacheDir, "bt_${System.currentTimeMillis()}.mp4")
+        currentFile = File(cacheDir, "bt_${System.currentTimeMillis()}${extensionForMime(currentMime)}")
         currentOutput = FileOutputStream(currentFile)
         runOnUiThread {
             bufferStatus.text = "Buffer: 0%"
@@ -230,9 +248,17 @@ class ClientActivity : Activity(), BluetoothConnection.Listener {
         runOnUiThread {
             status.text = "Estado: reproducción lista"
             bufferStatus.text = "Buffer: 100%"
+            videoView.stopPlayback()
             videoView.setVideoURI(Uri.fromFile(file))
-            videoView.start()
+            videoView.requestFocus()
         }
+    }
+
+    private fun extensionForMime(mime: String): String = when {
+        mime.contains("webm", ignoreCase = true) -> ".webm"
+        mime.contains("quicktime", ignoreCase = true) -> ".mov"
+        mime.contains("3gpp", ignoreCase = true) -> ".3gp"
+        else -> ".mp4"
     }
 
     private fun showError(payload: ByteArray) = runOnUiThread {

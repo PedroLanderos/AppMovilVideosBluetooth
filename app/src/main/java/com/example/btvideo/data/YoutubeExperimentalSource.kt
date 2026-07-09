@@ -45,6 +45,7 @@ class YoutubeExperimentalSource(private val context: Context) {
             addOption("--no-mtime")
             addOption("--force-overwrites")
             addOption("--merge-output-format", "mp4")
+            addOption("--remux-video", "mp4")
             addOption("-o", outputTemplate)
             addOption("-f", formatSelector(lowPower))
         }
@@ -134,19 +135,34 @@ class YoutubeExperimentalSource(private val context: Context) {
     private fun File.toTransferVideo(): TransferVideo = TransferVideo(
         displayName = name,
         totalBytes = length(),
-        mime = "video/mp4",
+        mime = mimeFromExtension(name),
         inputStreamFactory = { inputStream() }
     )
 
-    private fun findCachedFile(prefix: String): File? = downloadDir
-        .listFiles()
-        ?.filter { file -> file.isFile && file.name.startsWith(prefix) && file.length() > 0L }
-        ?.maxByOrNull { it.lastModified() }
+    private fun findCachedFile(prefix: String): File? {
+        val files = downloadDir
+            .listFiles()
+            ?.filter { file -> file.isFile && file.name.startsWith(prefix) && file.length() > 0L }
+            .orEmpty()
+
+        // Preferimos MP4 porque VideoView suele fallar con WebM/AV1/VP9 en algunos equipos.
+        return files
+            .filter { it.extension.equals("mp4", ignoreCase = true) }
+            .maxByOrNull { it.lastModified() }
+            ?: files.maxByOrNull { it.lastModified() }
+    }
 
     private fun formatSelector(lowPower: Boolean): String = if (lowPower) {
-        "bestvideo[ext=mp4][height<=240]+bestaudio[ext=m4a]/best[ext=mp4][height<=240]/worst[ext=mp4]/worst"
+        "bestvideo[ext=mp4][vcodec^=avc1][height<=240]+bestaudio[ext=m4a][acodec^=mp4a]/best[ext=mp4][vcodec^=avc1][height<=240]/best[ext=mp4][height<=240]/worst[ext=mp4]/worst"
     } else {
-        "bestvideo[ext=mp4][height<=360]+bestaudio[ext=m4a]/best[ext=mp4][height<=360]/best[ext=mp4]/best"
+        "bestvideo[ext=mp4][vcodec^=avc1][height<=360]+bestaudio[ext=m4a][acodec^=mp4a]/best[ext=mp4][vcodec^=avc1][height<=360]/best[ext=mp4][height<=360]/best[ext=mp4]/best"
+    }
+
+    private fun mimeFromExtension(name: String): String = when (name.substringAfterLast('.', "").lowercase(Locale.US)) {
+        "webm" -> "video/webm"
+        "mov" -> "video/quicktime"
+        "3gp", "3gpp" -> "video/3gpp"
+        else -> "video/mp4"
     }
 
     private fun normalizeYoutubeIdOrUrl(value: String): String {
