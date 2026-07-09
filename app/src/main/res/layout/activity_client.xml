@@ -114,6 +114,27 @@
         android:textColor="?attr/screenTextColor"
         android:buttonTint="?attr/brandColor" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
+
+        <Button
+            android:id="@+id/historyButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ver historial" />
+
+        <Button
+            android:id="@+id/favoritesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ver favoritos" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/bufferStatus"
         android:layout_width="match_parent"

@@ -162,3 +162,22 @@ Para ejecutarlo:
 4. Ejecuta `Run 'YoutubeExperimentalSourceTest'`.
 
 Nota: estos tests dependen de Internet, YouTube, yt-dlp y FFmpeg. Si YouTube cambia formatos o bloquea temporalmente el acceso a un video, el test puede fallar aunque la app compile correctamente.
+
+
+## Historial y favoritos visibles
+
+En la pantalla Cliente hay dos botones: **Ver historial** y **Ver favoritos**.
+
+- **Ver historial** muestra los videos reproducidos cuando el modo privado está apagado.
+- **Ver favoritos** muestra los videos marcados con el botón Favorito.
+- Desde ambas listas se puede volver a reproducir el video.
+- En Favoritos se puede quitar un elemento con el botón Quitar favorito.
+- En Historial se puede limpiar la lista con el botón Limpiar historial.
+
+Los tests de almacenamiento están en:
+
+```text
+app/src/androidTest/java/com/example/btvideo/data/LocalStoreTest.kt
+```
+
+Para probarlos desde Android Studio, abre ese archivo y ejecuta la clase `LocalStoreTest`.
