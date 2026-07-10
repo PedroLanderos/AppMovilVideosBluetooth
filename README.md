@@ -1,5 +1,7 @@
 # BluetoothVideoPlayerStarter
 
+LINK CON VIDEO DE PRUEBA: https://drive.google.com/file/d/15GiRz4ZVAf57E3kxM6z6Xn52OC0N0luF/view?usp=sharing
+
 Aplicación Android nativa en Kotlin + XML que implementa una arquitectura Cliente-Servidor por Bluetooth para buscar, transferir y reproducir videos en un dispositivo cliente sin conexión directa a Internet.
 
 ## Modos principales
